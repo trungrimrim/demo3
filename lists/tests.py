@@ -50,6 +50,10 @@ class TestHomePage(TestCase):
 
         response = home_page(request)
 
+        self.assertEqual(Item.objects.count(),1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text,'4 Minjah ct')
+
         self.assertIn('4 Minjah ct',response.content.decode())
 
 
