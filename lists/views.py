@@ -8,4 +8,5 @@ def home_page(request):
     :returns: TODO
 
     """
-    return HttpResponse('<html><title>Property list</title></html>')
+    #return HttpResponse('<html><title>Property list</title></html>')
+    return render(request, 'home.html')
