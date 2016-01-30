@@ -1,10 +1,23 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 
-from lists.models import Item
+from lists.models import Item,List
 
 # Create your views here.
-def view_list(request):
+def new_list(request):
+    """TODO: Docstring for new_list.
+
+    :request: TODO
+    :returns: TODO
+
+    """
+    #item = Item()
+    #item.text = request.POST['item_text']
+    list_ = List.objects.create()
+    Item.objects.create(text=request.POST['item_text'], list =list_)
+    return redirect('/lists/the-only-list/')
+
+def view_list(request, list_id):
     """TODO: Docstring for view_list.
 
     :request: TODO
@@ -33,11 +46,11 @@ def home_page(request):
         
         #})
 
-    if request.method == 'POST':
-        new_item_text = request.POST['item_text']
-        Item.objects.create(text=new_item_text)
-        return redirect('/lists/the-only-list/',{'new_item_text':new_item_text})
+    #if request.method == 'POST':
+        #new_item_text = request.POST['item_text']
+        #Item.objects.create(text=new_item_text)
+        #return redirect('/lists/the-only-list/',{'new_item_text':new_item_text})
 
-    items = Item.objects.all()
+    #items = Item.objects.all()
 
-    return render(request,'home.html', {'items': items})
+    return render(request,'home.html')
