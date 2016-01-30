@@ -54,12 +54,32 @@ class TestHomePage(TestCase):
         new_item = Item.objects.first()
         self.assertEqual(new_item.text,'4 Minjah ct')
 
-        self.assertIn('4 Minjah ct',response.content.decode())
+        self.assertEqual(response.status_code,302)
+        self.assertEqual(response['location'],'/')
+
+        #self.assertIn('4 Minjah ct',response.content.decode())
 
 
-        expected_html = render_to_string('home.html',
-                {'new_item_text': '4 Minjah ct'})
-        self.assertEqual(expected_html,response.content.decode())
+        #expected_html = render_to_string('home.html',
+                #{'new_item_text': '4 Minjah ct'})
+        #self.assertEqual(expected_html,response.content.decode())
+
+    def test_home_page_display_all_items(self):
+        Item.objects.create(text='item 1')
+        Item.objects.create(text='item 2')
+
+        request = HttpRequest()
+        response = home_page(request)
+
+        self.assertIn('item 1',response.content.decode())
+        self.assertIn('item 2',response.content.decode())
+        
+
+    def test_dont_save_blank_item(self):
+        request = HttpRequest()
+        home_page(request)
+        self.assertEqual(Item.objects.count(),0)
+        
 
 class TestItemModel(TestCase):
 
