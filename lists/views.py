@@ -4,6 +4,17 @@ from django.http import HttpResponse
 from lists.models import Item,List
 
 # Create your views here.
+def add_item(request, list_id):
+    """TODO: Docstring for add_item.
+
+    :request: TODO
+    :returns: TODO
+
+    """
+    list_ = List.objects.get(id=list_id)
+    Item.objects.create(text=request.POST['item_text'], list=list_)
+    return redirect('/lists/%d/'%(list_.id))
+
 def new_list(request):
     """TODO: Docstring for new_list.
 
@@ -15,7 +26,7 @@ def new_list(request):
     #item.text = request.POST['item_text']
     list_ = List.objects.create()
     Item.objects.create(text=request.POST['item_text'], list =list_)
-    return redirect('/lists/the-only-list/')
+    return redirect('/lists/%d/'%(list_.id))
 
 def view_list(request, list_id):
     """TODO: Docstring for view_list.
@@ -24,8 +35,10 @@ def view_list(request, list_id):
     :returns: TODO
 
     """
-    items = Item.objects.all()
-    return render(request, 'list.html', {'items':items})
+    list_ = List.objects.get(id=list_id)
+    #items = Item.objects.all()
+    items = Item.objects.filter(list=list_)
+    return render(request, 'list.html', {'list':list_})
 
 def home_page(request):
     """TODO: Docstring for home_page.
