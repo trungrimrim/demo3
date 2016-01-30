@@ -16,7 +16,7 @@ class TestNewAgent(unittest.TestCase):
         self.browser.get('http://localhost:8000')
 
         # he notices the page title and header mention 'real-estate' lists
-        assert 'Real Estate' in self.browser.title, "Title was " + self.browser.title
+        assert 'Property' in self.browser.title, "Title was " + self.browser.title
 
         # he is invited to enter a new listing straight away
 
