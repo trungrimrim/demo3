@@ -18,6 +18,8 @@ class TestNewAgent(unittest.TestCase):
         # he notices the page title and header mention 'real-estate' lists
         assert 'Property' in self.browser.title, "Title was " + self.browser.title
 
+        self.fail('finish the test')
+
         # he is invited to enter a new listing straight away
 
         # he types "4 dingley village" into a text box
