@@ -55,7 +55,7 @@ class TestHomePage(TestCase):
         self.assertEqual(new_item.text,'4 Minjah ct')
 
         self.assertEqual(response.status_code,302)
-        self.assertEqual(response['location'],'/')
+        self.assertEqual(response['location'],'/lists/the-only-list/')
 
         #self.assertIn('4 Minjah ct',response.content.decode())
 
@@ -64,15 +64,15 @@ class TestHomePage(TestCase):
                 #{'new_item_text': '4 Minjah ct'})
         #self.assertEqual(expected_html,response.content.decode())
 
-    def test_home_page_display_all_items(self):
-        Item.objects.create(text='item 1')
-        Item.objects.create(text='item 2')
+    #def test_home_page_display_all_items(self):
+        #Item.objects.create(text='item 1')
+        #Item.objects.create(text='item 2')
 
-        request = HttpRequest()
-        response = home_page(request)
+        #request = HttpRequest()
+        #response = home_page(request)
 
-        self.assertIn('item 1',response.content.decode())
-        self.assertIn('item 2',response.content.decode())
+        #self.assertIn('item 1',response.content.decode())
+        #self.assertIn('item 2',response.content.decode())
         
 
     def test_dont_save_blank_item(self):
@@ -105,3 +105,26 @@ class TestItemModel(TestCase):
 
         first_saved = saved_items[0]
         self.assertEqual(first_saved.text,'The first item')
+
+class TestListView(TestCase):
+
+    """Test case docstring."""
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def test_displays_all_items(self):
+        Item.objects.create(text='item1')
+        Item.objects.create(text='item2')
+
+        response = self.client.get('/lists/the-only-list/')
+        self.assertContains(response,'item1')
+        self.assertContains(response,'item2')
+
+    def test_uses_list_template(self):
+        response = self.client.get('/lists/the-only-list/')
+        self.assertTemplateUsed(response,'list.html')
+        

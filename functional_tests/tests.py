@@ -2,7 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 
-class TestNewAgent(unittest.TestCase):
+from django.test import LiveServerTestCase
+
+class TestNewAgent(LiveServerTestCase):
 
     """Test case docstring."""
 
@@ -25,13 +27,13 @@ class TestNewAgent(unittest.TestCase):
         self.assertIn(row_text,[row.text for row in rows])
 
     def test_can_start_a_list_and_retrieve_it_later(self):
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # he notices the page title and header mention 'real-estate' lists
         assert 'Property' in self.browser.title, "Title was " + self.browser.title
 
         header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertIn('Property',header_text)
+        self.assertIn('Start a new',header_text)
 
         # he is invited to enter a new listing straight away
         inputbox = self.browser.find_element_by_id('id_new_item')
@@ -40,9 +42,12 @@ class TestNewAgent(unittest.TestCase):
         # he types "4 dingley village" into a text box
         inputbox.send_keys('4 dingley village')
 
-        # when he hits enter, the page update, and the page lists
+        # when he hits enter, the page update, url also updated following rest
+        # convention and the page lists
         #  "1: 4 dingley village" as an item in the list
         inputbox.send_keys(Keys.ENTER)
+        heng_url = self.browser.current_url
+        self.assertRegex(heng_url, '/lists/.+')
         self.check_for_row_in_list_table('1: 4 dingley village')
 
         #table = self.browser.find_element_by_id('id_list_table')
@@ -65,6 +70,24 @@ class TestNewAgent(unittest.TestCase):
         self.check_for_row_in_list_table('1: 4 dingley village')
         self.check_for_row_in_list_table('2: 6 blackwood drive')
 
+        # Kim comes, there is no sign of Heng's list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('4 dingley village',page_text)
+        self.assertNotIn('6 blackwood drive',page_text)
+
+        # Kim starts entering her listings
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('narra waren')
+        inputbox.send_keys(Keys.ENTER)
+        # Kim gets her own url
+        kim_url = self.browser.current_url
+        self.assertRegex(kim_url, '/lists/.+')
+        self.assertNotEqual(kim_url,heng_url)
+        #again, no clue about listings of heng
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('dingley village',page_text)
+        self.assertIn('narra waren',page_text)
 
         # Heng wants to make sure the list is there for him, he sees 
         # that the site generate a unique URL for him -- there is some
