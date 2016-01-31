@@ -1,16 +1,3 @@
-<html>
-<title>Property Listings</title>
-<body>
-    <h1>Start a new listing</h1>
-    <form action="/lists/new" method="post" accept-charset="utf-8">
-        <input type="text" name="item_text" id="id_new_item" value="" placeholder="Enter a listing" />
-        {% csrf_token %}
-    </form>
-    <!--<table border="0" cellspacing="5" cellpadding="5" id="id_list_table">-->
-        <!--<tr><td>1: {{ new_item_text }}</td></tr>-->
-        <!--{% for item in items %}-->
-        <!--<tr><td>{{forloop.counter}}: {{ item.text }}</td></tr>-->
-        <!--{% endfor %}-->
-    <!--</table>-->
-</body>
-</html>
+{% extends 'base.html' %}
+{% block header_text %}Start a new listing {% endblock %}
+{% block form_action %}/lists/new{% endblock %}
