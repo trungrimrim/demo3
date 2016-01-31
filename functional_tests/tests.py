@@ -2,9 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
-class TestNewAgent(LiveServerTestCase):
+class TestNewAgent(StaticLiveServerTestCase):
 
     """Test case docstring."""
 
@@ -37,7 +37,7 @@ class TestNewAgent(LiveServerTestCase):
                 inputbox.size['width'] /2 ,512,delta=5)
 
         # he notices the page title and header mention 'real-estate' lists
-        assert 'Property' in self.browser.title, "Title was " + self.browser.title
+        assert 'Listings' in self.browser.title, "Title was " + self.browser.title
 
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Start a new',header_text)
