@@ -18,11 +18,20 @@ eg, on Ubuntu:
 
 * see nginx.template.conf
 * replace SITENAME with , eg, staging.my-domain.com
+* sed "s/SITENAME/hostToDeploy/g" nginx.template.conf | sudo tee /etc/nginx/sites-available/hostToDeploy
+* (fix username as neccessary)
+* symbolic linking: sudo ln -s ../sites-available/hostToDeploy /etc/nginx/sites-enabled/hostToDeploy
+* (delete default site as neccessary)
 
 ## Upstart Job
 
 * see gunicorn-upstart.template.conf
 * replace SITENAME with , eg, staging.my-domain.com
+* sed "s/SITENAME/hostToDeploy/g" gunicorn-upstart.template.conf | sudo tee /etc/init/hostToDeploy.conf
+
+## Run services
+* sudo service nginx reload
+* sudo start hostToDeploy
 
 ## Folder structure:
 Assume we have a user account at /home/ubuntu
